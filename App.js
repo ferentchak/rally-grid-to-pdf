@@ -28,17 +28,18 @@ Ext.define('Rally.newProject.StoryGrid', {
                     text: 'Print to PDF',
                     id: 'printPdfBtn',
                     handler: () => {
+                        let sharedStyles = 'border: 1px solid #222; padding: 5px; font-family: NotoSans,Helvetica,Arial;';
                         printJS({
-                            printable: 'userStoryGrid',
-                            type: 'html',
-                            // css files need to be passed along as grid doesn't display properly otherwise
-                            css: [
-                                '/apps/2.0/rui/resources/css/rui-all_01.css',
-                                '/apps/2.0/rui/resources/css/rui-all_02.css',
-                                '/apps/2.0/rui/resources/css/rui-fonts.css'
+                            printable: this._getDataAsJson(),
+                            properties: [
+                                { field: 'name', displayName: 'Name', columnSize: '60%' },
+                                { field: 'scheduleState', displayName: 'Schedule State', columnSize: '20%' },
+                                { field: 'awesomeTown', displayName: 'Awesome Town', columnSize: '20%' }
                             ],
-                            scanStyles: false, // Disable scanning of styles since we're passing the styles in the function call
-                            documentTitle: 'User Stories for Iteration: ' + this.down('rallyiterationcombobox').rawValue
+                            gridHeaderStyle: sharedStyles + ' font-size: 14px;',
+                            gridStyle: sharedStyles + ' font-size: 12px;',
+                            documentTitle: 'User Stories for Iteration: ' + this.down('rallyiterationcombobox').rawValue,
+                            type: 'json'
                         });
                     }
                 }
@@ -48,7 +49,7 @@ Ext.define('Rally.newProject.StoryGrid', {
 
     _onIterationsLoaded: function () {
         // Add the user story grid to the page
-        this.add({
+        this.storyGrid = this.add({
             xtype: 'rallygrid',
             id: 'userStoryGrid',
             columnCfgs: [
@@ -83,8 +84,7 @@ Ext.define('Rally.newProject.StoryGrid', {
     },
 
     _onIterationChanged: function () {
-        let storyGrid = this.down('rallygrid'),
-            storyStore = storyGrid.getStore();
+        let storyStore = this.storyGrid.getStore();
         storyStore.clearFilter(true);
         storyStore.filter(this._getIterationFilter());
     },
@@ -92,4 +92,16 @@ Ext.define('Rally.newProject.StoryGrid', {
     _getIterationFilter: function () {
         return this.down('rallyiterationcombobox').getQueryFromSelected();
     },
+
+    _getDataAsJson: function () {
+        var jsonData = [];
+        this.storyGrid.getStore().each((record) => {
+            jsonData.push({
+                "name": record.data.Name,
+                "scheduleState": record.data.ScheduleState,
+                "awesomeTown": record.data.c_AwesomeTown
+            });
+        });
+        return jsonData;
+    }
 });
