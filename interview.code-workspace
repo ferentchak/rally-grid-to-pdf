@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"editor.wordWrap": "off",
+		"window.zoomLevel": 2,
+		"files.autoSave": "onWindowChange",
+		"git.confirmSync": false,
+		"eslint.run": "onSave",
+		"eslint.autoFixOnSave": true,
+		"eslint.options": {
+			"extensions":[".js",".ts"]
+		},
+		"eslint.packageManager": "npm",
+		"git.enableSmartCommit": true,
+		"editor.minimap.enabled": false,
+		"git.autofetch": true,
+		"explorer.confirmDelete": false,
+		"explorer.confirmDragAndDrop": false,
+		"terminal.integrated.rendererType": "dom"
+	}
+}
